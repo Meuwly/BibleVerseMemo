@@ -308,6 +308,30 @@ export async function pushScopeSyncOperation(operation: ScopeSyncOperation): Pro
   }
 }
 
+export async function deleteVerseProgressRemote(userId: string, book: string, chapter: number, verse: number): Promise<void> {
+  if (!isSupabaseConfigured) {
+    return;
+  }
+
+  const { error } = await getClient()
+    .from('verse_progress')
+    .delete()
+    .eq('user_id', userId)
+    .eq('book', book)
+    .eq('chapter', chapter)
+    .eq('verse', verse);
+  rethrowPostgrest(error);
+}
+
+export async function deleteAllVerseProgressRemote(userId: string): Promise<void> {
+  if (!isSupabaseConfigured) {
+    return;
+  }
+
+  const { error } = await getClient().from('verse_progress').delete().eq('user_id', userId);
+  rethrowPostgrest(error);
+}
+
 export async function pushEventSyncOperation(operation: EventSyncOperation): Promise<void> {
   const client = getClient();
   const { eventType, payload, userId } = operation;

@@ -22,6 +22,7 @@ import { styles } from '../../src/features/progress/styles';
 import type { LeaderboardPlayer, ProgressOverviewStats } from '../../src/features/progress/types';
 import type { ActiveXpChallenge } from '../../src/features/xpChallenge';
 import { sharePngImage } from '../../src/utils/shareImage';
+import { useResponsiveLayout } from '../../src/hooks/useResponsiveLayout';
 
 type ProgressTab = 'personal' | 'multiplayer';
 
@@ -43,6 +44,7 @@ export default function ProgressScreen() {
     removeFriend,
   } = useAuthSocialState();
   const colors = getColors(theme);
+  const { isTablet } = useResponsiveLayout(680);
   const router = useRouter();
   const shareCardRef = useRef<ViewShot>(null);
   const [isSharing, setIsSharing] = useState(false);
@@ -389,7 +391,7 @@ export default function ProgressScreen() {
 
       <ScrollView
         style={styles.content}
-        contentContainerStyle={styles.contentContainer}
+        contentContainerStyle={[styles.contentContainer, isTablet && styles.contentContainerTablet]}
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.statsContainer}>

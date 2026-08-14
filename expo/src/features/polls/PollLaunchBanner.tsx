@@ -15,6 +15,7 @@ import { useRouter } from 'expo-router';
 import { getColors } from '../../../constants/colors';
 import { t } from '../../../constants/translations';
 import { useAppSettings } from '../../../contexts/AppContext';
+import { useResponsiveLayout } from '../../hooks/useResponsiveLayout';
 import {
   dismissPoll,
   fetchActivePoll,
@@ -34,6 +35,7 @@ import {
 export function PollLaunchBanner() {
   const { uiLanguage, theme } = useAppSettings();
   const colors = getColors(theme);
+  const { isTablet } = useResponsiveLayout(480);
   const router = useRouter();
   const isFrench = uiLanguage.startsWith('fr');
 
@@ -149,6 +151,7 @@ export function PollLaunchBanner() {
       <Animated.View
         style={[
           styles.card,
+          isTablet && styles.cardTablet,
           {
             backgroundColor: colors.cardBackground,
             borderColor: colors.primary + '40',
@@ -223,6 +226,15 @@ const styles = StyleSheet.create({
     shadowRadius: 16,
     // Elevation (Android)
     elevation: 12,
+  },
+  cardTablet: {
+    left: undefined,
+    right: undefined,
+    width: '100%',
+    maxWidth: 480,
+    alignSelf: 'center',
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
   },
   eyebrowRow: {
     flexDirection: 'row',

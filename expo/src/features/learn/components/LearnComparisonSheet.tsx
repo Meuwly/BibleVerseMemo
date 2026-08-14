@@ -3,6 +3,7 @@ import { Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
 import type { ColorScheme } from '../../../../constants/colors';
 import { LANGUAGES } from '../../../../constants/languages';
+import { useResponsiveLayout } from '../../../hooks/useResponsiveLayout';
 import { learnStyles } from '../styles';
 
 interface LearnComparisonSheetProps {
@@ -26,10 +27,17 @@ export function LearnComparisonSheet({
   onSelectPrimary,
   onSelectComparison,
 }: LearnComparisonSheetProps) {
+  const { isTablet } = useResponsiveLayout(560);
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
       <View style={learnStyles.selectionBackdrop}>
-        <View style={[learnStyles.selectionModal, { backgroundColor: colors.cardBackground }]}>
+        <View
+          style={[
+            learnStyles.selectionModal,
+            { backgroundColor: colors.cardBackground },
+            isTablet && learnStyles.selectionModalTablet,
+          ]}
+        >
           <Text style={[learnStyles.selectionTitle, { color: colors.text }]}>Éditions</Text>
           <ScrollView style={learnStyles.selectionList}>
             <Text style={[learnStyles.selectionSectionLabel, { color: colors.textSecondary }]}>Édition principale</Text>

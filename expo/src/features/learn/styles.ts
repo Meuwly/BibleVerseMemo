@@ -15,6 +15,11 @@ export const learnStyles = StyleSheet.create({
     gap: 16,
     paddingBottom: 40,
   },
+  contentContainerTablet: {
+    width: '100%',
+    maxWidth: 680,
+    alignSelf: 'center',
+  },
   contentContainerFocus: {
     paddingTop: 16,
     gap: 12,
@@ -358,6 +363,7 @@ export const learnStyles = StyleSheet.create({
   },
   rewardCardWrapper: {
     width: '100%',
+    maxWidth: 420,
     borderRadius: 20,
     padding: 20,
     gap: 16,
@@ -408,6 +414,11 @@ export const learnStyles = StyleSheet.create({
     paddingBottom: 24,
     maxHeight: '70%',
   },
+  selectionModalTablet: {
+    width: '100%',
+    maxWidth: 560,
+    alignSelf: 'center',
+  },
   selectionTitle: {
     fontSize: 18,
     fontWeight: '700',
@@ -423,5 +434,18 @@ export const learnStyles = StyleSheet.create({
   },
   selectionList: {
     maxHeight: 420,
+  },
+  selectionItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 14,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    gap: 12,
+  },
+  selectionText: {
+    fontSize: 15,
+    fontWeight: '500',
+    flex: 1,
   },
 });

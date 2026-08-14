@@ -14,6 +14,7 @@ import type { Verse, Language, TTSVoice, TTSSpeed, Theme } from "../../types/dat
 import { LANGUAGES } from "../../constants/languages";
 import { getLanguageCode, getVoicesForLanguage, speak, stop } from "../../utils/tts";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useResponsiveLayout } from "../../src/hooks/useResponsiveLayout";
 
 const ONBOARDING_KEY = '@onboarding_completed';
 const GUIDED_TOUR_KEY = '@guided_tour_completed';
@@ -53,6 +54,8 @@ export default function BooksScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { height: windowHeight } = useWindowDimensions();
+  const { isTablet, isWide } = useResponsiveLayout(760);
+  const bookColumns = isWide ? 3 : 2;
   const [books, setBooks] = useState<string[]>([]);
   const [bookNames, setBookNames] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(true);
@@ -549,11 +552,13 @@ export default function BooksScreen() {
         <LinearGradient colors={[...backgroundGradient]} style={styles.backgroundGradient} />
       )}
       <FlatList
+        key={`books-${bookColumns}`}
         data={filteredBooks}
         keyExtractor={(item) => item}
-        numColumns={2}
+        numColumns={bookColumns}
         columnWrapperStyle={styles.bookGridRow}
         contentContainerStyle={styles.list}
+        style={isTablet ? { width: '100%', maxWidth: 900, alignSelf: 'center' } : undefined}
         showsVerticalScrollIndicator={false}
         ListHeaderComponent={
           <>
@@ -656,7 +661,7 @@ export default function BooksScreen() {
         }
         renderItem={({ item, index }) => {
           const isNewTestament = NEW_TESTAMENT_BOOKS.has(item);
-          const isOddTrailingCard = filteredBooks.length % 2 === 1 && index === filteredBooks.length - 1;
+          const isOddTrailingCard = bookColumns === 2 && filteredBooks.length % 2 === 1 && index === filteredBooks.length - 1;
           const hasActiveSearch = booksSearchQuery.trim().length > 0;
 
           return (
@@ -1684,6 +1689,7 @@ const styles = StyleSheet.create({
   },
   guidedTourCard: {
     width: '90%',
+    maxWidth: 440,
     borderRadius: 20,
     borderWidth: 1,
     padding: 20,

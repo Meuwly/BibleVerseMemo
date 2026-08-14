@@ -9,6 +9,7 @@ import { isSupabaseConfigured, supabase } from '../../src/lib/supabase';
 import { getDefaultSrsState, normalizeVerseProgress } from '../../src/srs/spacedRepetition';
 import { STORAGE_KEYS, resetAppStorageCache, safeJsonParse, storageGetItem, storageSetItem } from '../../src/features/app/services/appStorage';
 import { enqueueBusinessEvent, flushUserStateSyncQueue, hydrateDedicatedStateFromStorage } from '../../src/features/app/services/userStateSync';
+import { deleteAllVerseProgressRemote, deleteVerseProgressRemote, logUserStateSyncError } from '../../src/features/app/services/userStateRemote';
 import { USER_STATE_SCOPE_KEYS } from '../../src/features/app/services/userStateScopes';
 import { useAppSettings } from './AppSettingsContext';
 
@@ -418,12 +419,36 @@ export const [AppProgressProvider, useAppProgress] = createContextHook<AppProgre
       storageSetItem(STORAGE_KEYS.xpBoostState, JSON.stringify(DEFAULT_XP_BOOST_STATE)),
     ]);
     await rescheduleNotifications(resetStreak);
+
+    if (isSupabaseConfigured) {
+      try {
+        const { data } = await supabase.auth.getSession();
+        const userId = data.session?.user?.id;
+        if (userId) {
+          await deleteAllVerseProgressRemote(userId);
+        }
+      } catch (error) {
+        logUserStateSyncError('resetScoreProgress: failed to delete remote verse_progress rows', error);
+      }
+    }
   }, [rescheduleNotifications]);
 
   const resetVerseProgress = useCallback(async (book: string, chapter: number, verse: number) => {
     const nextProgress = progress.filter((item) => !(item.book === book && item.chapter === chapter && item.verse === verse));
     setProgress(nextProgress);
     await storageSetItem(STORAGE_KEYS.progress, JSON.stringify(nextProgress));
+
+    if (isSupabaseConfigured) {
+      try {
+        const { data } = await supabase.auth.getSession();
+        const userId = data.session?.user?.id;
+        if (userId) {
+          await deleteVerseProgressRemote(userId, book, chapter, verse);
+        }
+      } catch (error) {
+        logUserStateSyncError('resetVerseProgress: failed to delete remote verse_progress row', error);
+      }
+    }
   }, [progress]);
 
   const toggleMemorized = useCallback(async (book: string, chapter: number, verse: number) => {

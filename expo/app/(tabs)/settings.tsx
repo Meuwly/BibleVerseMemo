@@ -30,6 +30,7 @@ import {
 import { useCustomVersionImport } from '../../src/features/settings/hooks/useCustomVersionImport';
 import { useSettingsAuth } from '../../src/features/settings/hooks/useSettingsAuth';
 import { useSettingsTts } from '../../src/features/settings/hooks/useSettingsTts';
+import { useResponsiveLayout } from '../../src/hooks/useResponsiveLayout';
 import type { Theme } from '../../types/database';
 
 const APP_VERSION = '2.0';
@@ -87,6 +88,7 @@ export default function SettingsScreen() {
 
   const colors = getColors(theme);
   const insets = useSafeAreaInsets();
+  const { isTablet } = useResponsiveLayout(680);
   const isIos = Platform.OS === 'ios';
   const tabBarBottomOffset = Math.max(insets.bottom + 10, 18);
   const contentBottomPadding = tabBarBottomOffset + 74 + 20;
@@ -390,6 +392,7 @@ export default function SettingsScreen() {
         style={settingsStyles.content}
         contentContainerStyle={[
           settingsStyles.contentContainer,
+          isTablet && settingsStyles.contentContainerTablet,
           { paddingBottom: contentBottomPadding },
         ]}
       >

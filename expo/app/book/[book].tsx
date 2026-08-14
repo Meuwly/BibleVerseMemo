@@ -6,10 +6,13 @@ import { useApp } from "../../contexts/AppContext";
 import { getChapters } from "../../utils/database";
 import { t, getBookName } from "../../constants/translations";
 import { getColors } from "../../constants/colors";
+import { useResponsiveLayout } from "../../src/hooks/useResponsiveLayout";
 
 export default function ChaptersScreen() {
   const { language, uiLanguage, theme } = useApp();
   const colors = getColors(theme);
+  const { isTablet, isWide } = useResponsiveLayout(720);
+  const chapterColumns = isWide ? 8 : isTablet ? 6 : 4;
   const router = useRouter();
   const { book } = useLocalSearchParams<{ book: string }>();
   const [chapters, setChapters] = useState<number[]>([]);
@@ -110,10 +113,12 @@ export default function ChaptersScreen() {
       </View>
 
       <FlatList
+        key={`chapters-${chapterColumns}`}
         data={chapters}
         keyExtractor={(item) => item.toString()}
-        numColumns={4}
+        numColumns={chapterColumns}
         contentContainerStyle={styles.list}
+        style={isTablet ? styles.listTabletWidth : undefined}
         renderItem={({ item }) => (
           <TouchableOpacity
             style={[styles.chapterCard, { backgroundColor: colors.cardBackground }]}
@@ -157,6 +162,11 @@ const styles = StyleSheet.create({
   },
   list: {
     padding: 16,
+  },
+  listTabletWidth: {
+    width: '100%',
+    maxWidth: 760,
+    alignSelf: 'center',
   },
   chapterCard: {
     flex: 1,
