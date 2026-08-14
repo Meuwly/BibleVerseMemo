@@ -14,6 +14,7 @@ import { getColors } from "../../constants/colors";
 import { t } from "../../constants/translations";
 import { useApp } from "../../contexts/AppContext";
 import { XpTopBadge } from "../../src/components/XpTopBadge";
+import { useResponsiveLayout } from "../../src/hooks/useResponsiveLayout";
 
 const formatRemaining = (ms: number) => {
   const safeMs = Math.max(ms, 0);
@@ -35,6 +36,9 @@ export default function TabLayout() {
   const { uiLanguage, theme, streakProgress, streakLossEventId, xpProgress } = useApp();
   const colors = getColors(theme);
   const insets = useSafeAreaInsets();
+  const { isTablet, width } = useResponsiveLayout();
+  const tabBarMaxWidth = 480;
+  const tabBarSideInset = isTablet ? Math.max(14, (width - tabBarMaxWidth) / 2) : 14;
   const router = useRouter();
   const segments = useSegments();
   const [showStreakTimer, setShowStreakTimer] = useState(false);
@@ -178,6 +182,7 @@ export default function TabLayout() {
   }, [isSettingsScreen]);
 
   const floatingBarBottom = Math.max(insets.bottom + 10, 18);
+  const streakRightInset = isTablet ? tabBarSideInset + 6 : 20;
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <Tabs
@@ -194,6 +199,8 @@ export default function TabLayout() {
             backgroundColor: colors.cardBackground,
             borderColor: colors.border,
             bottom: floatingBarBottom,
+            left: tabBarSideInset,
+            right: tabBarSideInset,
             shadowColor: colors.text,
           },
         }}
@@ -281,6 +288,7 @@ export default function TabLayout() {
                   {
                     backgroundColor: colors.warning,
                     bottom: floatingBarBottom + 74,
+                    right: streakRightInset + 24,
                     opacity: streakPulse.interpolate({
                       inputRange: [0, 0.35, 1],
                       outputRange: [0, 1, 0],
@@ -319,6 +327,7 @@ export default function TabLayout() {
                       backgroundColor: colors.cardBackground,
                       borderColor: colors.border,
                       bottom: floatingBarBottom + 72,
+                      right: streakRightInset,
                     },
                   ]}
                   onPress={() => setShowStreakTimer((prev) => !prev)}
@@ -341,6 +350,7 @@ export default function TabLayout() {
                 {
                   backgroundColor: colors.error,
                   bottom: floatingBarBottom + 68,
+                  right: streakRightInset - 8,
                   opacity: streakLossFlash.interpolate({
                     inputRange: [0, 1],
                     outputRange: [0, 0.18],
@@ -365,6 +375,7 @@ export default function TabLayout() {
                     backgroundColor: colors.cardBackground,
                     borderColor: colors.error,
                     bottom: floatingBarBottom + 160,
+                    right: streakRightInset,
                   },
                 ]}
               >
@@ -380,6 +391,7 @@ export default function TabLayout() {
                     backgroundColor: colors.cardBackground,
                     borderColor: colors.border,
                     bottom: floatingBarBottom + 130,
+                    right: streakRightInset,
                   },
                 ]}
                 onPress={() => router.push("/(tabs)/progress")}

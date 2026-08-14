@@ -27,6 +27,7 @@ import { getVerse } from "../../utils/database";
 import { speak, stop as stopTTS } from "../../utils/tts";
 import { getSrsSnapshot, type SrsSnapshot } from "../../src/srs/spacedRepetition";
 import type { VerseProgress } from "../../types/database";
+import { useResponsiveLayout } from "../../src/hooks/useResponsiveLayout";
 
 type SortOrder = 'srs-priority' | 'newest' | 'oldest';
 type FocusFilter = 'all' | 'due-now' | 'due-soon' | 'harder' | 'strong';
@@ -40,6 +41,7 @@ export default function MemorizedScreen() {
   const { language, uiLanguage, theme, progress, learningSettings, ttsSettings } = useApp();
   const colors = getColors(theme);
   const insets = useSafeAreaInsets();
+  const { isTablet } = useResponsiveLayout(700);
   const router = useRouter();
   const bottomListInset = 24 + 74 + Math.max(insets.bottom + 10, 18);
   const [selectedBook, setSelectedBook] = useState<string | null>(null);
@@ -688,6 +690,7 @@ export default function MemorizedScreen() {
         renderItem={renderVerseCard}
         keyExtractor={({ verseProgress }) => getVerseKey(verseProgress.book, verseProgress.chapter, verseProgress.verse)}
         contentContainerStyle={[styles.listContent, { paddingBottom: bottomListInset }]}
+        style={isTablet ? styles.listTabletWidth : undefined}
         scrollIndicatorInsets={{ bottom: bottomListInset }}
         ListHeaderComponent={headerComponent}
         ListEmptyComponent={(
@@ -868,6 +871,11 @@ const styles = StyleSheet.create({
   },
   listContent: {
     paddingBottom: 24,
+  },
+  listTabletWidth: {
+    width: '100%',
+    maxWidth: 760,
+    alignSelf: 'center',
   },
   emptyState: {
     paddingHorizontal: 40,

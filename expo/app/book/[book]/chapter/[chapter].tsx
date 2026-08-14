@@ -8,10 +8,12 @@ import { t } from "../../../../constants/translations";
 import { getColors } from "../../../../constants/colors";
 import { speak, stop as stopTTS } from "../../../../utils/tts";
 import type { Verse } from "../../../../types/database";
+import { useResponsiveLayout } from "../../../../src/hooks/useResponsiveLayout";
 
 export default function VersesScreen() {
   const { language, uiLanguage, theme, dyslexiaSettings, ttsSettings, getVerseProgress, resetVerseProgress } = useApp();
   const colors = getColors(theme);
+  const { isTablet } = useResponsiveLayout(700);
   const router = useRouter();
   const { book, chapter } = useLocalSearchParams<{ book: string; chapter: string }>();
   const [verses, setVerses] = useState<Verse[]>([]);
@@ -211,6 +213,7 @@ export default function VersesScreen() {
         data={verses}
         keyExtractor={(item) => `${item.book}-${item.chapter}-${item.verse}`}
         contentContainerStyle={styles.list}
+        style={isTablet ? styles.listTabletWidth : undefined}
         renderItem={({ item }) => {
           const progress = getVerseProgress(item.book, item.chapter, item.verse);
           const hasProgress = progress && (progress.started || progress.completed);
@@ -293,6 +296,11 @@ const styles = StyleSheet.create({
   list: {
     padding: 20,
     gap: 12,
+  },
+  listTabletWidth: {
+    width: '100%',
+    maxWidth: 700,
+    alignSelf: 'center',
   },
   verseCard: {
     borderRadius: 16,

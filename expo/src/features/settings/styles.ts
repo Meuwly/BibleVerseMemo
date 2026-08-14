@@ -28,6 +28,11 @@ export const settingsStyles = StyleSheet.create({
     paddingBottom: 32,
     gap: 16,
   },
+  contentContainerTablet: {
+    width: '100%',
+    maxWidth: 680,
+    alignSelf: 'center',
+  },
   heroCard: {
     marginTop: 18,
     borderRadius: 20,

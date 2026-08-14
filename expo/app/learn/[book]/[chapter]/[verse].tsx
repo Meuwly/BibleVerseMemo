@@ -33,6 +33,7 @@ import { RewardEngine } from '../../../../src/rewards/RewardEngine';
 import { buildReferenceText, buildVerseId } from '../../../../src/rewards/selectors';
 import { computeNextSrsState } from '../../../../src/srs/spacedRepetition';
 import type { VerseProgress } from '../../../../types/database';
+import { useResponsiveLayout } from '../../../../src/hooks/useResponsiveLayout';
 
 const PRACTICE_BADGE_VISIBILITY_MS = 5000;
 let persistentShowAllWordsLocked = false;
@@ -56,6 +57,7 @@ export default function LearnScreen() {
   } = useApp();
   const { incrementCompletedVerses, checkAndShowModal } = useSupportModal();
   const colors = getColors(theme);
+  const { isTablet } = useResponsiveLayout(680);
   const router = useRouter();
   const { book, chapter, verse, fromRandom, fromMemorized } = useLocalSearchParams<{
     book: string;
@@ -495,7 +497,7 @@ export default function LearnScreen() {
       >
         <ScrollView
           style={learnStyles.content}
-          contentContainerStyle={learnStyles.contentContainer}
+          contentContainerStyle={[learnStyles.contentContainer, isTablet && learnStyles.contentContainerTablet]}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >

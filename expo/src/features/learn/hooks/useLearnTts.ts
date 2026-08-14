@@ -48,6 +48,7 @@ export function useLearnTts({ verseData, language, ttsSettings }: UseLearnTtsPar
   }, [isSpeaking, language, ttsSettings.speed, ttsSettings.voiceIdentifier, verseData]);
 
   useEffect(() => {
+    void stopTTS();
     setIsSpeaking(false);
   }, [verseData?.book, verseData?.chapter, verseData?.verse]);
 

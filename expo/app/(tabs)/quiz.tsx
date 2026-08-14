@@ -18,6 +18,7 @@ import {
   type QuizChallengeRecord,
 } from '../../src/features/quizChallenge';
 import { describeError } from '../../utils/errorLogging';
+import { useResponsiveLayout } from '../../src/hooks/useResponsiveLayout';
 
 const shuffleOptions = <T,>(values: T[]): T[] => {
   const shuffled = [...values];
@@ -42,6 +43,7 @@ export default function QuizScreen() {
   const { profile } = useAuthProfileState();
   const { friends, leaderboard, fetchLeaderboard, sendQuizChallengeRequest, cancelQuizChallengeRequest } = useAuthSocialState();
   const colors = getColors(theme);
+  const { isTablet } = useResponsiveLayout(680);
   const [selectedCategory, setSelectedCategory] = useState<QuizCategory>(quizCategories[0].key);
   const [stage, setStage] = useState<'menu' | 'quiz' | 'result'>('menu');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -537,7 +539,7 @@ export default function QuizScreen() {
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       {stage === 'menu' && (
-        <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        <ScrollView contentContainerStyle={[styles.content, isTablet && styles.contentTablet]} showsVerticalScrollIndicator={false}>
           <View style={[styles.heroCard, { backgroundColor: colors.cardBackground, borderColor: colors.border }] }>
             <View style={[styles.heroIconWrap, { backgroundColor: colors.primary + '12' }] }>
               <HelpCircle color={colors.primary} size={24} />
@@ -765,7 +767,7 @@ export default function QuizScreen() {
             </View>
           </View>
 
-          <ScrollView contentContainerStyle={styles.gameContent} showsVerticalScrollIndicator={false}>
+          <ScrollView contentContainerStyle={[styles.gameContent, isTablet && styles.contentTablet]} showsVerticalScrollIndicator={false}>
             <Animated.View
               style={[
                 styles.questionCard,
@@ -941,6 +943,11 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 26,
     paddingBottom: 150,
+  },
+  contentTablet: {
+    width: '100%',
+    maxWidth: 680,
+    alignSelf: 'center',
   },
   heroCard: {
     borderWidth: 1,
@@ -1331,6 +1338,9 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   resultCard: {
+    width: '100%',
+    maxWidth: 480,
+    alignSelf: 'center',
     borderWidth: 1,
     borderRadius: 30,
     padding: 24,

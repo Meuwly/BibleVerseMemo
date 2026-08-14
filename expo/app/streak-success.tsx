@@ -171,6 +171,7 @@ const styles = StyleSheet.create({
   },
   previewCard: {
     width: '100%',
+    maxWidth: 440,
     borderRadius: 28,
     borderWidth: 1,
     paddingHorizontal: 24,
@@ -324,6 +325,7 @@ const styles = StyleSheet.create({
   },
   actionsRow: {
     width: '100%',
+    maxWidth: 440,
     flexDirection: 'row',
     gap: 12,
   },

@@ -9,17 +9,20 @@ import { useAppSettings } from '../../contexts/AppContext';
 import { AppButton } from '../../src/components/ui/AppButton';
 import { AppCard } from '../../src/components/ui/AppCard';
 import { EmptyState } from '../../src/components/ui/EmptyState';
+import { useResponsiveLayout } from '../../src/hooks/useResponsiveLayout';
 
 export default function ThemesScreen() {
   const { uiLanguage, theme } = useAppSettings();
   const colors = getColors(theme);
   const insets = useSafeAreaInsets();
+  const { isTablet } = useResponsiveLayout(680);
   const router = useRouter();
 
   return (
     <ScrollView
       contentContainerStyle={[
         styles.content,
+        isTablet && styles.contentTablet,
         {
           backgroundColor: colors.background,
           paddingTop: insets.top + 16,
@@ -75,6 +78,11 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingHorizontal: 20,
     gap: 16,
+  },
+  contentTablet: {
+    width: '100%',
+    maxWidth: 680,
+    alignSelf: 'center',
   },
   header: {
     gap: 8,

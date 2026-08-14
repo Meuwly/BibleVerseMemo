@@ -75,6 +75,11 @@ export const styles = StyleSheet.create({
   contentContainer: {
     paddingBottom: 120,
   },
+  contentContainerTablet: {
+    width: '100%',
+    maxWidth: 680,
+    alignSelf: 'center',
+  },
   statsContainer: {
     padding: 20,
     gap: 18,

@@ -10,10 +10,12 @@ import { getRewardsCards, getRewardsVitrail } from '../src/storage/rewardsRepo';
 import type { RewardCard, VitrailState } from '../src/rewards/types';
 import { VitrailTile } from '../src/components/rewards/VitrailTile';
 import { ShareableVerseCard } from '../src/components/rewards/ShareableVerseCard';
+import { useResponsiveLayout } from '../src/hooks/useResponsiveLayout';
 
 export default function VitrailScreen() {
   const { uiLanguage, theme } = useApp();
   const colors = getColors(theme);
+  const { isTablet } = useResponsiveLayout(700);
   const router = useRouter();
   const [vitrail, setVitrail] = useState<VitrailState>({ tiles: {} });
   const [cards, setCards] = useState<RewardCard[]>([]);
@@ -49,7 +51,7 @@ export default function VitrailScreen() {
           ),
         }}
       />
-      <ScrollView contentContainerStyle={styles.content}> 
+      <ScrollView contentContainerStyle={[styles.content, isTablet && styles.contentTablet]}>
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: colors.text }]}>{t(uiLanguage, 'rewardVitrailSection')}</Text>
           {tileEntries.length === 0 ? (
@@ -97,6 +99,11 @@ const styles = StyleSheet.create({
   content: {
     padding: 20,
     gap: 24,
+  },
+  contentTablet: {
+    width: '100%',
+    maxWidth: 700,
+    alignSelf: 'center',
   },
   section: {
     gap: 12,

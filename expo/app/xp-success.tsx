@@ -417,6 +417,8 @@ const styles = StyleSheet.create({
     lineHeight: 80,
   },
   actionsRow: {
+    width: '100%',
+    maxWidth: 420,
     marginTop: 16,
     flexDirection: 'row',
     gap: 10,
